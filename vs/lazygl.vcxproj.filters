@@ -1,0 +1,218 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{d82656ea-a0bf-4103-b9bd-c96b091f6fe2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lib">
+      <UniqueIdentifier>{40ca2dbd-eb75-412c-82a1-c43f1202ed8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lib\glad">
+      <UniqueIdentifier>{06d711b7-3b69-4949-80a2-867c5fc5aa91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\lazygl">
+      <UniqueIdentifier>{e2327951-3b48-4254-a14e-45685325e0a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\lazygl\shader">
+      <UniqueIdentifier>{6c95e407-963f-4098-a701-b96bcfb55a2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\lazygl\utils">
+      <UniqueIdentifier>{efb38c30-390c-41ce-a0d9-9edddf0afa27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\lazygl\object">
+      <UniqueIdentifier>{9cab3ec7-1fc2-405b-b504-2954004300c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\lazygl\window">
+      <UniqueIdentifier>{765091b2-c6e0-4430-890c-a2c452ec041a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\lazygl\window\input">
+      <UniqueIdentifier>{c8b62d68-88bc-4a03-84e6-854e36cb953a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\shader">
+      <UniqueIdentifier>{f78cb934-513c-464d-b0f0-afb6e7424bac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="git">
+      <UniqueIdentifier>{db030d72-af70-42e0-b261-91d3a647cfad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\lazygl\context">
+      <UniqueIdentifier>{73e0fd89-fae3-4f9b-bcb0-7ffb25510693}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\lazygl\geom">
+      <UniqueIdentifier>{89dd3517-3990-4e77-a279-6f20178a591c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\lazygl\renderer">
+      <UniqueIdentifier>{1c06b2ce-6edf-4b2a-ac4e-e106fbfb7092}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\lazygl\resource">
+      <UniqueIdentifier>{fb05381e-ba63-4bb3-b931-067213e0667e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\lazygl\font">
+      <UniqueIdentifier>{e7afc3f9-fccc-45e0-87cd-4e311b3bb41a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\lazygl\window\window.cc">
+      <Filter>src\lazygl\window</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib\glad\glad.c">
+      <Filter>lib\glad</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\lazygl\utils\logger.cc">
+      <Filter>src\lazygl\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\lazygl\window\input\keyboard.cc">
+      <Filter>src\lazygl\window\input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\lazygl\window\input\mouse.cc">
+      <Filter>src\lazygl\window\input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\lazygl\shader\program.cc">
+      <Filter>src\lazygl\shader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\lazygl\shader\shader.cc">
+      <Filter>src\lazygl\shader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\lazygl\engine.cc">
+      <Filter>src\lazygl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\lazygl\main.cc">
+      <Filter>src\lazygl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\lazygl\object\vertex_array.cc">
+      <Filter>src\lazygl\object</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\lazygl\context\context.cc">
+      <Filter>src\lazygl\context</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\lazygl\utils\convert_gl.cc">
+      <Filter>src\lazygl\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\lazygl\geom\mesh.cc">
+      <Filter>src\lazygl\geom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\lazygl\utils\async_loader.cc">
+      <Filter>src\lazygl\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\lazygl\renderer\camera.cc">
+      <Filter>src\lazygl\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\lazygl\renderer\painter2d.cc">
+      <Filter>src\lazygl\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\lazygl\renderer\renderer.cc">
+      <Filter>src\lazygl\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\lazygl\object\mesh_object.cc">
+      <Filter>src\lazygl\object</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\lazygl\geom\texture.cc">
+      <Filter>src\lazygl\geom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\lazygl\font\font.cc">
+      <Filter>src\lazygl\font</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\lazygl\window\window.h">
+      <Filter>src\lazygl\window</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\lazygl\object\buffer.h">
+      <Filter>src\lazygl\object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lib\glad\glad.h">
+      <Filter>lib\glad</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\lazygl\utils\logger.h">
+      <Filter>src\lazygl\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\lazygl\window\input\keyboard.h">
+      <Filter>src\lazygl\window\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\lazygl\window\input\mouse.h">
+      <Filter>src\lazygl\window\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\lazygl\shader\program.h">
+      <Filter>src\lazygl\shader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\lazygl\shader\shader.h">
+      <Filter>src\lazygl\shader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\lazygl\types.h">
+      <Filter>src\lazygl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\lazygl\engine.h">
+      <Filter>src\lazygl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\lazygl\object\vertex_array.h">
+      <Filter>src\lazygl\object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\lazygl\context\context.h">
+      <Filter>src\lazygl\context</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\lazygl\utils\convert_gl.h">
+      <Filter>src\lazygl\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\lazygl\geom\mesh.h">
+      <Filter>src\lazygl\geom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\lazygl\geom\texture.h">
+      <Filter>src\lazygl\geom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\lazygl\utils\async_loader.h">
+      <Filter>src\lazygl\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\lazygl\renderer\camera.h">
+      <Filter>src\lazygl\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\lazygl\renderer\painter2d.h">
+      <Filter>src\lazygl\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\lazygl\renderer\renderer.h">
+      <Filter>src\lazygl\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\lazygl\object\mesh_object.h">
+      <Filter>src\lazygl\object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\lazygl\resource\resources.h">
+      <Filter>src\lazygl\resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\lazygl\object\texture_object.h">
+      <Filter>src\lazygl\object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\lazygl\font\font.h">
+      <Filter>src\lazygl\font</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\src\shader\color_2d.frag">
+      <Filter>src\shader</Filter>
+    </None>
+    <None Include="..\src\shader\color_2d.vert">
+      <Filter>src\shader</Filter>
+    </None>
+    <None Include="..\.gitignore">
+      <Filter>git</Filter>
+    </None>
+    <None Include="..\README.md">
+      <Filter>git</Filter>
+    </None>
+    <None Include="..\src\shader\mesh.frag">
+      <Filter>src\shader</Filter>
+    </None>
+    <None Include="..\src\shader\mesh.vert">
+      <Filter>src\shader</Filter>
+    </None>
+    <None Include="..\src\shader\screen_color.frag">
+      <Filter>src\shader</Filter>
+    </None>
+    <None Include="..\src\shader\screen_color.vert">
+      <Filter>src\shader</Filter>
+    </None>
+    <None Include="..\src\shader\screen_texture.frag">
+      <Filter>src\shader</Filter>
+    </None>
+    <None Include="..\src\shader\screen_texture.vert">
+      <Filter>src\shader</Filter>
+    </None>
+  </ItemGroup>
+</Project>
