@@ -102,16 +102,16 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <AdditionalIncludeDirectories>C:\lib\assimp\include;C:\lib\eigen-eigen-323c052e1731;..\src;..\lib</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\lib\freetype-2.10.0\include;C:\lib\assimp\include;C:\lib\eigen-eigen-323c052e1731;..\src;..\lib</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>assimp-vc142-mt.lib;glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>freetype.lib;assimp-vc142-mt.lib;glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -136,10 +136,10 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <AdditionalIncludeDirectories>C:\lib\assimp\include;C:\lib\eigen-eigen-323c052e1731;..\src;..\lib</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\lib\freetype-2.10.0\include;C:\lib\assimp\include;C:\lib\eigen-eigen-323c052e1731;..\src;..\lib</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -147,7 +147,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>assimp-vc142-mt.lib;glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>freetype.lib;assimp-vc142-mt.lib;glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -155,6 +155,7 @@
     <ClCompile Include="..\src\lazygl\context\context.cc" />
     <ClCompile Include="..\src\lazygl\engine.cc" />
     <ClCompile Include="..\src\lazygl\font\font.cc" />
+    <ClCompile Include="..\src\lazygl\font\glyph.cc" />
     <ClCompile Include="..\src\lazygl\geom\mesh.cc" />
     <ClCompile Include="..\src\lazygl\geom\texture.cc" />
     <ClCompile Include="..\src\lazygl\main.cc" />
@@ -177,6 +178,7 @@
     <ClInclude Include="..\src\lazygl\context\context.h" />
     <ClInclude Include="..\src\lazygl\engine.h" />
     <ClInclude Include="..\src\lazygl\font\font.h" />
+    <ClInclude Include="..\src\lazygl\font\glyph.h" />
     <ClInclude Include="..\src\lazygl\geom\mesh.h" />
     <ClInclude Include="..\src\lazygl\geom\texture.h" />
     <ClInclude Include="..\src\lazygl\object\buffer.h" />
@@ -206,8 +208,12 @@
     <None Include="..\src\shader\mesh.vert" />
     <None Include="..\src\shader\screen_color.frag" />
     <None Include="..\src\shader\screen_color.vert" />
+    <None Include="..\src\shader\screen_font.frag" />
+    <None Include="..\src\shader\screen_font.vert" />
     <None Include="..\src\shader\screen_texture.frag" />
     <None Include="..\src\shader\screen_texture.vert" />
+    <None Include="..\src\shader\screen_texture_1d_horizontal.frag" />
+    <None Include="..\src\shader\screen_texture_1d_horizontal.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

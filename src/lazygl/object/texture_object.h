@@ -39,6 +39,7 @@ protected:
   enum class Type
   {
     UNKNOWN = 0,
+    TEXTURE_1D = GL_TEXTURE_1D,
     TEXTURE_2D = GL_TEXTURE_2D,
   };
 
@@ -114,30 +115,39 @@ public:
 
   void WrapS(Wrap wrap)
   {
-    Bind();
-    glTexParameteri(static_cast<GLenum>(type_), GL_TEXTURE_WRAP_S, static_cast<GLint>(wrap));
-    Unbind();
+    wrap_s_ = wrap;
+    need_filter_update_ = true;
   }
 
   void WrapT(Wrap wrap)
   {
-    Bind();
-    glTexParameteri(static_cast<GLenum>(type_), GL_TEXTURE_WRAP_T, static_cast<GLint>(wrap));
-    Unbind();
+    wrap_t_ = wrap;
+    need_filter_update_ = true;
   }
 
   void MinFilter(typename MinFilter filter)
   {
-    Bind();
-    glTexParameteri(static_cast<GLenum>(type_), GL_TEXTURE_MIN_FILTER, static_cast<GLint>(filter));
-    Unbind();
+    min_filter_ = filter;
+    need_filter_update_ = true;
   }
 
   void MagFilter(typename MagFilter filter)
   {
-    Bind();
-    glTexParameteri(static_cast<GLenum>(type_), GL_TEXTURE_MAG_FILTER, static_cast<GLint>(filter));
-    Unbind();
+    mag_filter_ = filter;
+    need_filter_update_ = true;
+  }
+
+  void UpdateFilters()
+  {
+    if (need_filter_update_)
+    {
+      glTexParameteri(static_cast<GLenum>(type_), GL_TEXTURE_WRAP_S, static_cast<GLint>(wrap_s_));
+      glTexParameteri(static_cast<GLenum>(type_), GL_TEXTURE_WRAP_T, static_cast<GLint>(wrap_t_));
+      glTexParameteri(static_cast<GLenum>(type_), GL_TEXTURE_MIN_FILTER, static_cast<GLint>(min_filter_));
+      glTexParameteri(static_cast<GLenum>(type_), GL_TEXTURE_MAG_FILTER, static_cast<GLint>(mag_filter_));
+
+      need_filter_update_ = false;
+    }
   }
 
   void Generate()
@@ -169,7 +179,13 @@ private:
   GLuint id_ = 0;
   Type type_ = Type::UNKNOWN;
 
+  Wrap wrap_s_ = Wrap::REPEAT;
+  Wrap wrap_t_ = Wrap::REPEAT;
+  enum class MinFilter min_filter_ = MinFilter::LINEAR;
+  enum class MagFilter mag_filter_ = MagFilter::LINEAR;
+
   bool need_update_ = false;
+  bool need_filter_update_ = false;
 
   Logger log_{ "TextureObject" };
 };
@@ -182,6 +198,10 @@ public:
   TextureObject2D()
     : TextureObject(Type::TEXTURE_2D)
   {
+    WrapS(Wrap::REPEAT);
+    WrapT(Wrap::REPEAT);
+    MinFilter(MinFilter::LINEAR_MIPMAP_LINEAR);
+    MagFilter(MagFilter::LINEAR);
   }
 
   ~TextureObject2D() override = default;
@@ -219,19 +239,70 @@ public:
 
     Bind();
     glTexImage2D(static_cast<GLenum>(GetType()), 0, internal_format, texture.Width(), texture.Height(), 0, format, type, texture.Data().data());
-    Unbind();
-
-    WrapS(Wrap::REPEAT);
-    WrapT(Wrap::REPEAT);
-    MinFilter(MinFilter::LINEAR_MIPMAP_LINEAR);
-    MagFilter(MagFilter::LINEAR);
-
-    Bind();
     glGenerateMipmap(static_cast<GLenum>(GetType()));
+    UpdateFilters();
     Unbind();
   }
 
 private:
+  Logger log_{ "TextureObject2D" };
+};
+
+
+template <typename T>
+class TextureObject1D : public TextureObject
+{
+public:
+  TextureObject1D()
+    : TextureObject(Type::TEXTURE_1D)
+  {
+    WrapS(Wrap::REPEAT);
+    MinFilter(MinFilter::LINEAR_MIPMAP_LINEAR);
+    MagFilter(MagFilter::LINEAR);
+  }
+
+  ~TextureObject1D() override = default;
+
+  void Update(const geom::Texture1D<T>& texture)
+  {
+    GLenum internal_format = GL_RGBA;
+    GLenum format = GL_RGBA;
+    GLenum type = GL_UNSIGNED_BYTE;
+    switch (texture.NumComponents())
+    {
+    case 1:
+      internal_format = GL_RED;
+      format = GL_RED;
+      break;
+
+    case 2:
+      internal_format = GL_RG;
+      format = GL_RG;
+      break;
+
+    case 3:
+      internal_format = GL_RGB;
+      format = GL_RGB;
+      break;
+
+    case 4:
+      internal_format = GL_RGBA;
+      format = GL_RGBA;
+      break;
+
+    default:
+      break;
+    }
+
+    Bind();
+    glTexImage1D(static_cast<GLenum>(GetType()), 0, internal_format, texture.Length(), 0, format, type, texture.Data().data());
+    glGenerateMipmap(static_cast<GLenum>(GetType()));
+    UpdateFilters();
+    Unbind();
+  }
+
+private:
+  Logger log_{ "TextureObject1sD" };
 };
 }
 

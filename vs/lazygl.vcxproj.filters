@@ -111,6 +111,9 @@
     <ClCompile Include="..\src\lazygl\font\font.cc">
       <Filter>src\lazygl\font</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\lazygl\font\glyph.cc">
+      <Filter>src\lazygl\font</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\lazygl\window\window.h">
@@ -182,6 +185,9 @@
     <ClInclude Include="..\src\lazygl\font\font.h">
       <Filter>src\lazygl\font</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\lazygl\font\glyph.h">
+      <Filter>src\lazygl\font</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\src\shader\color_2d.frag">
@@ -212,6 +218,18 @@
       <Filter>src\shader</Filter>
     </None>
     <None Include="..\src\shader\screen_texture.vert">
+      <Filter>src\shader</Filter>
+    </None>
+    <None Include="..\src\shader\screen_texture_1d_horizontal.frag">
+      <Filter>src\shader</Filter>
+    </None>
+    <None Include="..\src\shader\screen_texture_1d_horizontal.vert">
+      <Filter>src\shader</Filter>
+    </None>
+    <None Include="..\src\shader\screen_font.frag">
+      <Filter>src\shader</Filter>
+    </None>
+    <None Include="..\src\shader\screen_font.vert">
       <Filter>src\shader</Filter>
     </None>
   </ItemGroup>

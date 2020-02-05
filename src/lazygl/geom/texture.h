@@ -12,11 +12,11 @@ namespace lazygl
 {
 namespace geom
 {
-class TextureBase : public AsyncLoader
+class TextureBase
 {
 public:
   TextureBase() = default;
-  ~TextureBase() = default;
+  virtual ~TextureBase() = default;
 
   // Copy constructors
   void Copy(const TextureBase& rhs)
@@ -24,14 +24,12 @@ public:
   }
 
   TextureBase(const TextureBase& rhs)
-    : AsyncLoader(rhs)
   {
     Copy(rhs);
   }
 
   TextureBase& operator = (const TextureBase& rhs)
   {
-    AsyncLoader::Copy(rhs);
     Copy(rhs);
     return *this;
   }
@@ -42,14 +40,12 @@ public:
   }
 
   TextureBase(TextureBase&& rhs) noexcept
-    : AsyncLoader(std::move(rhs))
   {
     Move(std::move(rhs));
   }
 
   TextureBase& operator = (TextureBase&& rhs) noexcept
   {
-    AsyncLoader::Move(std::move(rhs));
     Move(std::move(rhs));
     return *this;
   }
@@ -58,7 +54,7 @@ private:
 };
 
 template <typename T>
-class Texture : public TextureBase
+class Texture : public TextureBase, public AsyncLoader
 {
 private:
   class Ref
@@ -95,6 +91,12 @@ private:
       return texture_.data_[idx_ + 3];
     }
 
+    Ref& operator = (T v)
+    {
+      texture_.data_[idx_] = v;
+      return *this;
+    }
+
     Ref& operator = (const VectorX<T>& v)
     {
       for (int i = 0; i < v.rows(); i++)
@@ -129,7 +131,7 @@ public:
   {
   }
 
-  ~Texture() = default;
+  ~Texture() override = default;
 
   // Copy constructors do not copy the asynchronously loading texture
   void Copy(const Texture& rhs)
@@ -141,13 +143,14 @@ public:
   }
 
   Texture(const Texture& rhs)
-    : TextureBase(rhs)
+    : TextureBase(rhs), AsyncLoader(rhs)
   {
     Copy(rhs);
   }
 
   Texture& operator = (const Texture& rhs)
   {
+    AsyncLoader::Copy(rhs);
     TextureBase::Copy(rhs);
     Copy(rhs);
     return *this;
@@ -167,13 +170,14 @@ public:
   }
 
   Texture(Texture&& rhs) noexcept
-    : TextureBase(std::move(rhs))
+    : TextureBase(std::move(rhs)), AsyncLoader(std::move(rhs))
   {
     Move(std::move(rhs));
   }
 
   Texture& operator = (Texture&& rhs) noexcept
   {
+    TextureBase::Move(std::move(rhs));
     AsyncLoader::Move(std::move(rhs));
     Move(std::move(rhs));
     return *this;
@@ -221,6 +225,146 @@ bool Texture<unsigned char>::LoadFunc(const std::string& filename);
 
 template <>
 bool Texture<float>::LoadFunc(const std::string& filename);
+
+
+
+template<typename T>
+class Texture1D : public TextureBase
+{
+private:
+  class Ref
+  {
+  public:
+    Ref(Texture1D& texture, int idx)
+      : texture_(texture), idx_(idx)
+    {
+    }
+
+    ~Ref() = default;
+
+    T& R()
+    {
+      return texture_.data_[idx_ + 0];
+    }
+
+    T& G()
+    {
+      return texture_.data_[idx_ + 1];
+    }
+
+    T& B()
+    {
+      return texture_.data_[idx_ + 2];
+    }
+
+    T& A()
+    {
+      return texture_.data_[idx_ + 3];
+    }
+
+    Ref& operator = (const VectorX<T> & v)
+    {
+      for (int i = 0; i < v.rows(); i++)
+        texture_.data_[idx_ + i] = v(i);
+      return *this;
+    }
+
+    template<int rows>
+    Ref& operator = (const Vector<T, rows> & v)
+    {
+      for (int i = 0; i < v.rows(); i++)
+        texture_.data_[idx_ + i] = v(i);
+      return *this;
+    }
+
+  private:
+    Texture1D& texture_;
+    int idx_;
+  };
+
+public:
+  Texture1D() = default;
+
+  Texture1D(int length, int num_components)
+    : length_(length), num_components_(num_components), data_(length * num_components, static_cast<T>(0))
+  {
+  }
+
+  ~Texture1D() override = default;
+
+  // Copy constructors
+  void Copy(const Texture1D& rhs)
+  {
+  }
+
+  Texture1D(const Texture1D& rhs)
+    : TextureBase(rhs)
+  {
+    Copy(rhs);
+  }
+
+  Texture1D& operator = (const Texture1D& rhs)
+  {
+    TextureBase::Copy(rhs);
+    Copy(rhs);
+    return *this;
+  }
+
+  // Move constructors
+  void Move(Texture1D&& rhs)
+  {
+  }
+
+  Texture1D(Texture1D&& rhs)
+    : TextureBase(std::move(rhs))
+  {
+    Move(std::move(rhs));
+  }
+
+  Texture1D& operator = (Texture1D&& rhs)
+  {
+    TextureBase::Move(std::move(rhs));
+    Move(std::move(rhs));
+    return *this;
+  }
+
+  Ref operator () (int s)
+  {
+    return Ref(*this, s * num_components_);
+  }
+
+
+  int Length() const
+  {
+    return length_;
+  }
+
+  auto NumComponents() const
+  {
+    return num_components_;
+  }
+
+  const auto& Data() const
+  {
+    return data_;
+  }
+
+  void Resize(int n)
+  {
+    Resize(n, static_cast<T>(0));
+  }
+
+  void Resize(int n, T v)
+  {
+    length_ = n;
+    data_.resize(n * num_components_, v);
+  }
+
+private:
+  int length_ = 1;
+  int num_components_ = 0;
+  std::vector<T> data_;
+};
 }
 }
 
