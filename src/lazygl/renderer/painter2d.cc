@@ -110,8 +110,8 @@ void Painter2D::Draw()
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glViewport(0, 0, Width(), Height());
 
-  RenderText(100, 100, 1., "Hello world!", Vector3f(1.f, 0.f, 0.f));
-  RenderText(100, 200, 1., L"æ»≥Á«œººø‰", Vector3f(0.f, 0.f, 0.f));
+  RenderText(100, 100, 1., "Hello world!\nMalgun gothic", Vector3f(1.f, 0.f, 0.f));
+  RenderText(100, 200, 1., L"æ»≥Á«œººø‰\n∏º¿∫ ∞ÌµÒ", Vector3f(0.f, 0.f, 0.f));
 }
 
 void Painter2D::DrawRect(double x, double y, double width, double height, const Vector3f& color)
@@ -154,31 +154,45 @@ void Painter2D::RenderText(double x, double y, double font_size, const std::wstr
   // TODO: convert font_size to scale
   double scale = font_size;
 
+  // TODO: line width
+  constexpr double line_height = 64.;
+
+  double start_x = x;
+
   for (auto c : s)
   {
-    const auto& glyph = arial_(c);
-
-    const auto& size = glyph.Size();
-    const auto& bearing = glyph.Bearing();
-    const auto& buffer = glyph.Buffer();
-    auto advance = glyph.Advance();
-
-    for (int i = 0; i < size(0); i++)
+    if (c == L'\n')
     {
-      for (int j = 0; j < size(1); j++)
-      {
-        int idx = i + (size(1) - j - 1) * size(0);
-        glyph_texture_(i, j) = buffer[idx];
-      }
+      x = start_x;
+      y -= line_height * scale;
     }
-    glyph_object_.Update(glyph_texture_);
 
-    double width = size(0) * scale;
-    double height = size(1) * scale;
+    else
+    {
+      const auto& glyph = arial_(c);
 
-    DrawGlyphTexture(x + bearing(0) * scale, y + (bearing(1) - height) * scale, width, height, size, glyph_object_);
+      const auto& size = glyph.Size();
+      const auto& bearing = glyph.Bearing();
+      const auto& buffer = glyph.Buffer();
+      auto advance = glyph.Advance();
 
-    x += (advance >> 6) * scale;
+      for (int i = 0; i < size(0); i++)
+      {
+        for (int j = 0; j < size(1); j++)
+        {
+          int idx = i + (size(1) - j - 1) * size(0);
+          glyph_texture_(i, j) = buffer[idx];
+        }
+      }
+      glyph_object_.Update(glyph_texture_);
+
+      double width = size(0) * scale;
+      double height = size(1) * scale;
+
+      DrawGlyphTexture(x + bearing(0) * scale, y + (bearing(1) - height) * scale, width, height, size, glyph_object_);
+
+      x += (advance >> 6)* scale;
+    }
   }
 }
 
