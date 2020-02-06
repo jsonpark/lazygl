@@ -214,6 +214,8 @@
     <None Include="..\src\shader\screen_color.vert" />
     <None Include="..\src\shader\screen_font.frag" />
     <None Include="..\src\shader\screen_font.vert" />
+    <None Include="..\src\shader\screen_font_grid.frag" />
+    <None Include="..\src\shader\screen_font_grid.vert" />
     <None Include="..\src\shader\screen_texture.frag" />
     <None Include="..\src\shader\screen_texture.vert" />
     <None Include="..\src\shader\screen_texture_1d_horizontal.frag" />

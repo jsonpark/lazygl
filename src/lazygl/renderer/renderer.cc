@@ -45,8 +45,7 @@ void Renderer::Resize(int width, int height)
 void Renderer::Initialize()
 {
   glClearColor(1.f, 1.f, 1.f, 1.f);
-  //glEnable(GL_MULTISAMPLE);
-  glDisable(GL_MULTISAMPLE);
+  glEnable(GL_MULTISAMPLE);
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -62,6 +61,9 @@ void Renderer::Initialize()
   rect_texture_1d_.AttribPointer(0, 2, rect_buffer_, 3, 0);
   rect_texture_1d_.AttribPointer(1, 1, rect_buffer_, 3, 2);
   rect_texture_1d_.Indices(VertexArray::DrawMode::TRIANGLE_STRIP, rect_elements_);
+
+  rect_font_grid_.AttribPointer(0, 2, rect_buffer_);
+  rect_font_grid_.Indices(VertexArray::DrawMode::TRIANGLE_STRIP, rect_elements_);
 
   texture_(0, 0) = Vector<unsigned char, 4>(255, 255, 255, 255);
   texture_(1, 0) = Vector<unsigned char, 4>(0, 0, 0, 255);
@@ -109,6 +111,7 @@ void Renderer::PrepareDraw()
   program_screen_texture_.Uniform2i("screen", Width(), Height());
   program_screen_texture_1d_horizontal_.Uniform2i("screen", Width(), Height());
   program_screen_font_.Uniform2i("screen", Width(), Height());
+  program_screen_font_grid_.Uniform2i("screen", Width(), Height());
 }
 
 void Renderer::Draw()
@@ -136,6 +139,7 @@ void Renderer::Draw()
   program_mesh_.Use();
   meshes_["base"].Draw();
 
+  glDisable(GL_MULTISAMPLE);
   RenderText(20, 500, 36., "Sample", Vector3f(0.f, 0.f, 0.f));
   RenderText(20, 550, 36., L"æ»≥Á«œººø‰", Vector3f(0.f, 0.f, 0.f));
   RenderText(20, 400, 8., 
@@ -187,15 +191,18 @@ void Renderer::RenderText(double x, double y, double font_size, const std::strin
 
 void Renderer::RenderText(double x, double y, double font_size, const std::wstring& s, const Vector3f& color)
 {
-  glDisable(GL_DEPTH_TEST);
+  // Convert font_size from point to pixel
+  double font_size_pixel = font_size * 4. / 3.;
+  if (font_size_pixel <= 64)
+  {
+    RenderTextGrid(x, y, font_size, s, color);
+    return;
+  }
 
   program_screen_font_.Uniform3f("color", color);
 
-  // TODO: convert font_size to scale
-  double scale = font_size / 64. * 4. / 3.;
-
-  // TODO: line width
-  constexpr double line_height = 70.;
+  double scale = font_size_pixel / 64.;
+  double line_height = 64.;
 
   double start_x = x;
 
@@ -238,6 +245,74 @@ void Renderer::RenderText(double x, double y, double font_size, const std::wstri
       x += (advance >> 6) * scale;
     }
   }
+
+}
+
+void Renderer::RenderTextGrid(double x, double y, double font_size, const std::wstring& s, const Vector3f& color)
+{
+  // Convert font_size from point to pixel
+  double font_size_pixel = font_size * 4. / 3.;
+  if (font_size_pixel > 64)
+  {
+    RenderText(x, y, font_size, s, color);
+    return;
+  }
+
+  program_screen_font_grid_.Uniform3f("color", color);
+
+  font_size_pixel = std::round(font_size_pixel);
+  int glyph_height = static_cast<int>(font_size_pixel);
+
+  // TODO: line width
+  double line_height = font_size_pixel + 1;
+
+  // Round (x, y) to integer
+  x = std::round(x);
+  y = std::round(y);
+
+  double start_x = x;
+
+  for (auto c : s)
+  {
+    if (c == L'\n')
+    {
+      x = start_x;
+      y -= line_height;
+      y = std::round(y);
+    }
+
+    else
+    {
+      const auto& glyph = arial_(c, glyph_height);
+
+      const auto& size = glyph.Size();
+      const auto& bearing = glyph.Bearing();
+      const auto& buffer = glyph.Buffer();
+      auto advance = glyph.Advance();
+
+      for (int i = 0; i < 64; i++)
+        for (int j = 0; j < 64; j++)
+          glyph_texture_(i, j) = 0;
+
+      for (int i = 0; i < size(0); i++)
+      {
+        for (int j = 0; j < size(1); j++)
+        {
+          int idx = i + (size(1) - j - 1) * size(0);
+          glyph_texture_(i, j) = buffer[idx];
+        }
+      }
+      glyph_object_.Update(glyph_texture_);
+
+      double width = size(0);
+      double height = size(1);
+
+      DrawGlyphTextureGrid(x + bearing(0), y + bearing(1) - height, width, height, size, glyph_object_);
+
+      x += (advance >> 6);
+      x = std::round(x);
+    }
+  }
 }
 
 void Renderer::DrawGlyphTexture(double x, double y, double width, double height, const Vector2i& glyph_size, TextureObject2D<unsigned char>& glyph)
@@ -269,6 +344,34 @@ void Renderer::DrawGlyphTexture(double x, double y, double width, double height,
   program_screen_font_.Use();
   glyph.Bind();
   rect_texture_.Draw();
+  glyph.Unbind();
+}
+
+void Renderer::DrawGlyphTextureGrid(double x, double y, double width, double height, const Vector2i& glyph_size, TextureObject2D<unsigned char>& glyph)
+{
+  glDisable(GL_DEPTH_TEST);
+
+  x = std::round(x);
+  y = std::round(y);
+
+  constexpr int stride = 2;
+
+  rect_buffer_[0 * stride + 0] = static_cast<float>(x);
+  rect_buffer_[0 * stride + 1] = static_cast<float>(y);
+
+  rect_buffer_[1 * stride + 0] = static_cast<float>(x + width);
+  rect_buffer_[1 * stride + 1] = static_cast<float>(y);
+
+  rect_buffer_[2 * stride + 0] = static_cast<float>(x);
+  rect_buffer_[2 * stride + 1] = static_cast<float>(y + height);
+
+  rect_buffer_[3 * stride + 0] = static_cast<float>(x + width);
+  rect_buffer_[3 * stride + 1] = static_cast<float>(y + height);
+
+  program_screen_font_grid_.Uniform2i("left_bottom", static_cast<int>(x), static_cast<int>(y));
+  program_screen_font_grid_.Use();
+  glyph.Bind();
+  rect_font_grid_.Draw();
   glyph.Unbind();
 }
 }

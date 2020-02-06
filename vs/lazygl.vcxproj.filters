@@ -247,5 +247,11 @@
     <None Include="..\src\shader\screen_font.vert">
       <Filter>src\shader</Filter>
     </None>
+    <None Include="..\src\shader\screen_font_grid.frag">
+      <Filter>src\shader</Filter>
+    </None>
+    <None Include="..\src\shader\screen_font_grid.vert">
+      <Filter>src\shader</Filter>
+    </None>
   </ItemGroup>
 </Project>

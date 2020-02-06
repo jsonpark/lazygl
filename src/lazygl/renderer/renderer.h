@@ -103,9 +103,12 @@ public:
 
   void RenderText(double x, double y, double font_size, const std::string& s, const Vector3f& color = Vector3f(0.f, 0.f, 0.f));
   void RenderText(double x, double y, double font_size, const std::wstring& s, const Vector3f& color = Vector3f(0.f, 0.f, 0.f));
+  // When font height in pixel <= 64
+  void RenderTextGrid(double x, double y, double font_size, const std::wstring& s, const Vector3f& color = Vector3f(0.f, 0.f, 0.f));
 
   // Texture size is always 64x64, while glyph size is smaller.
   void DrawGlyphTexture(double x, double y, double width, double height, const Vector2i& glyph_size, TextureObject2D<unsigned char>& glyph);
+  void DrawGlyphTextureGrid(double x, double y, double width, double height, const Vector2i& glyph_size, TextureObject2D<unsigned char>& glyph);
 
 
 private:
@@ -120,12 +123,14 @@ private:
   ElementBuffer rect_elements_{ {0, 1, 2, 3}, BufferUsage::STATIC_DRAW };
   VertexArray rect_;
   VertexArray rect_texture_;
+  VertexArray rect_font_grid_;
   VertexArray rect_texture_1d_;
 
   Program program_screen_color_{ "..\\src\\shader", "screen_color" };
   Program program_screen_texture_{ "..\\src\\shader", "screen_texture" };
   Program program_screen_texture_1d_horizontal_{ "..\\src\\shader", "screen_texture_1d_horizontal" };
   Program program_screen_font_{ "..\\src\\shader", "screen_font" };
+  Program program_screen_font_grid_{ "..\\src\\shader", "screen_font_grid" };
   Program program_mesh_{ "..\\src\\shader", "mesh" };
 
   geom::Texture<unsigned char> texture_{ 2, 2, 4 };

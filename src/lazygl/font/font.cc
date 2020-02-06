@@ -36,25 +36,27 @@ Font::~Font()
   FT_Done_FreeType(ft_);
 }
 
-Glyph Font::operator () (char x)
+Glyph Font::operator () (char x, int height_pixels)
 {
   return (*this)(static_cast<wchar_t>(x));
 }
 
-Glyph Font::operator () (wchar_t x)
+Glyph Font::operator () (wchar_t x, int height_pixels)
 {
+  FT_Set_Pixel_Sizes(face_, 0, height_pixels);
   FT_Load_Char(face_, x, FT_LOAD_RENDER);
   return Glyph(face_->glyph);
 }
 
-std::vector<Glyph> Font::operator () (const std::string& s)
+std::vector<Glyph> Font::operator () (const std::string& s, int height_pixels)
 {
   std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
   return (*this)(converter.from_bytes(s));
 }
 
-std::vector<Glyph> Font::operator () (const std::wstring& s)
+std::vector<Glyph> Font::operator () (const std::wstring& s, int height_pixels)
 {
+  FT_Set_Pixel_Sizes(face_, 0, height_pixels);
   std::vector<Glyph> result;
 
   for (auto c : s)

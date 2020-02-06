@@ -22,10 +22,10 @@ public:
 
   ~Font();
 
-  Glyph operator () (char x);
-  Glyph operator () (wchar_t x);
-  std::vector<Glyph> operator () (const std::string& s);
-  std::vector<Glyph> operator () (const std::wstring& s);
+  Glyph operator () (char x, int height_pixels = 64);
+  Glyph operator () (wchar_t x, int height_pixels = 64);
+  std::vector<Glyph> operator () (const std::string& s, int height_pixels = 64);
+  std::vector<Glyph> operator () (const std::wstring& s, int height_pixels = 64);
 
 private:
   std::string font_directory_;
