@@ -169,6 +169,7 @@
     <ClCompile Include="..\src\lazygl\utils\async_loader.cc" />
     <ClCompile Include="..\src\lazygl\utils\convert_gl.cc" />
     <ClCompile Include="..\src\lazygl\utils\logger.cc" />
+    <ClCompile Include="..\src\lazygl\widget\widget.cc" />
     <ClCompile Include="..\src\lazygl\window\input\keyboard.cc" />
     <ClCompile Include="..\src\lazygl\window\input\mouse.cc" />
     <ClCompile Include="..\src\lazygl\window\window.cc" />
@@ -195,6 +196,9 @@
     <ClInclude Include="..\src\lazygl\utils\async_loader.h" />
     <ClInclude Include="..\src\lazygl\utils\convert_gl.h" />
     <ClInclude Include="..\src\lazygl\utils\logger.h" />
+    <ClInclude Include="..\src\lazygl\widget\split_widget.h" />
+    <ClInclude Include="..\src\lazygl\widget\widget.h" />
+    <ClInclude Include="..\src\lazygl\window\input\inputs.h" />
     <ClInclude Include="..\src\lazygl\window\input\keyboard.h" />
     <ClInclude Include="..\src\lazygl\window\input\mouse.h" />
     <ClInclude Include="..\src\lazygl\window\window.h" />

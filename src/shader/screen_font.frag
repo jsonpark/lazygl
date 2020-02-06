@@ -9,5 +9,6 @@ out vec4 out_color;
 
 void main()
 {
-  out_color = vec4(color, texture(tex, frag_tex_coord).r);
+  float alpha = texture(tex, frag_tex_coord).r;
+  out_color = vec4(color, 1.f - (1.f - alpha) * (1.f - alpha));
 }

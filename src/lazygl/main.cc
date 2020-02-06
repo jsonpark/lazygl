@@ -8,7 +8,6 @@
 int main()
 {
   lazygl::Engine engine;
-  auto test_window = engine.CreateWindowPtr<lazygl::Painter2D>(800, 600, "Painter2d");
   auto renderer = engine.CreateWindowPtr<lazygl::Renderer>(800, 600, "Renderer");
 
   try

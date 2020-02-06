@@ -49,6 +49,9 @@
     <Filter Include="src\lazygl\font">
       <UniqueIdentifier>{e7afc3f9-fccc-45e0-87cd-4e311b3bb41a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\lazygl\widget">
+      <UniqueIdentifier>{03c05122-2d28-4a51-8d1b-ebf0a38cabcf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\lazygl\window\window.cc">
@@ -113,6 +116,9 @@
     </ClCompile>
     <ClCompile Include="..\src\lazygl\font\glyph.cc">
       <Filter>src\lazygl\font</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\lazygl\widget\widget.cc">
+      <Filter>src\lazygl\widget</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -187,6 +193,15 @@
     </ClInclude>
     <ClInclude Include="..\src\lazygl\font\glyph.h">
       <Filter>src\lazygl\font</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\lazygl\widget\widget.h">
+      <Filter>src\lazygl\widget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\lazygl\widget\split_widget.h">
+      <Filter>src\lazygl\widget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\lazygl\window\input\inputs.h">
+      <Filter>src\lazygl\window\input</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
