@@ -11,6 +11,12 @@
 #include "lazygl/object/mesh_object.h"
 #include "lazygl/font/font.h"
 
+// Widget rendering
+#include "lazygl/widget/widget.h"
+#include "lazygl/widget/split_widget.h"
+#include "lazygl/widget/text_widget.h"
+#include "lazygl/widget/pushbutton_widget.h"
+
 namespace lazygl
 {
 class Renderer : public Window
@@ -39,6 +45,16 @@ public:
   void Resize(int width, int height) override;
   void PrepareDraw() override;
   void Draw() override;
+
+  // Interaction with widgets
+  template <class WidgetClass>
+  void WidgetMouseButton(std::shared_ptr<WidgetClass> widget, input::MouseButton button, input::MouseAction action, double x, double y);
+
+  template <class WidgetClass>
+  void WidgetMouseMove(std::shared_ptr<WidgetClass> widget, double x, double y);
+
+  template <class WidgetClass>
+  void WidgetDraw(std::shared_ptr<WidgetClass> widget);
 
   // Utility functions
   void DrawRect(double x, double y, double width, double height, const Vector3f& color);
@@ -142,16 +158,38 @@ private:
   geom::Texture<unsigned char> glyph_texture_{ 64, 64, 1 };
   TextureObject2D<unsigned char> glyph_object_;
 
-  //Font arial_{ "C:\\Windows\\Fonts", "malgun" };
-  Font arial_{ "C:\\Windows\\Fonts", "consola" };
+  Font arial_{ "C:\\Windows\\Fonts", "malgun" };
+  //Font arial_{ "C:\\Windows\\Fonts", "consola" };
 
   Textures textures_;
   TextureObjects texture_objects_;
 
   MeshObjects meshes_;
 
+  // Widget rendering
+  std::shared_ptr<Widget> widget_;
+
+  // Widget control
+  std::shared_ptr<Widget> mouse_active_widget_;
+  Vector2d mouse_pos_;
+  Vector2d mouse_active_pos_;
+
+  std::shared_ptr<Widget> keyboard_active_widget_;
+
+  // Widget position rendering for finding mouse/keyboard widgets
+
   Logger log_{ "Render2D" };
 };
+
+// Instantiations for the base widget type
+template <>
+void Renderer::WidgetMouseButton(std::shared_ptr<Widget> widget, input::MouseButton button, input::MouseAction action, double x, double y);
+
+template <>
+void Renderer::WidgetMouseMove(std::shared_ptr<Widget> widget, double x, double y);
+
+template <>
+void Renderer::WidgetDraw(std::shared_ptr<Widget> widget);
 }
 
 #endif // LAZYGL_WINDOW_RENDERER_H_

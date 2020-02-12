@@ -9,11 +9,13 @@
 
 namespace lazygl
 {
+class Renderer;
+
 class Widget : public std::enable_shared_from_this<Widget>
 {
 public:
   static void Connect(std::shared_ptr<Widget> parent, std::shared_ptr<Widget> child);
-  static void Disonnect(std::shared_ptr<Widget> parent, std::shared_ptr<Widget> child);
+  static void Disconnect(std::shared_ptr<Widget> parent, std::shared_ptr<Widget> child);
 
 public:
   Widget();
@@ -36,6 +38,11 @@ public:
   const auto& GetSize() const
   {
     return size_;
+  }
+
+  const auto& GetRootPos() const
+  {
+    return root_pos_;
   }
 
   void SetPos(double x, double y)
@@ -75,13 +82,13 @@ public:
     shown_ ^= true;
   }
 
-  void Update();
-  
-  // Input functions
-  virtual void MouseButton(input::MouseButton button, input::MouseAction action, double x, double y);
-  virtual void MouseMove(double x, double y);
-  virtual void Keyboard(input::Key key, input::KeyAction action);
+  const auto& GetChildren() const
+  {
+    return children_;
+  }
 
+  void UpdatePosSize();
+  
   // Resize update function
   virtual void UpdateChildrenPosSize();
 
@@ -95,8 +102,14 @@ private:
   Vector2d pos_{ 0., 0. };
   Vector2d size_{ 0., 0. };
 
+  Vector2d root_pos_{ 0., 0. };
+
   std::weak_ptr<Widget> parent_;
   std::vector<std::shared_ptr<Widget>> children_;
+
+  // Mouse/keyboard active widgets
+  std::shared_ptr<Widget> mouse_widget_;
+  std::shared_ptr<Widget> keyboard_widget_;
 
   bool shown_ = true;
 };

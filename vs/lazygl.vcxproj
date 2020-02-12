@@ -169,6 +169,10 @@
     <ClCompile Include="..\src\lazygl\utils\async_loader.cc" />
     <ClCompile Include="..\src\lazygl\utils\convert_gl.cc" />
     <ClCompile Include="..\src\lazygl\utils\logger.cc" />
+    <ClCompile Include="..\src\lazygl\widget\pushbutton_widget.cc" />
+    <ClCompile Include="..\src\lazygl\widget\text_widget.cc" />
+    <ClCompile Include="..\src\lazygl\widget\treeview\treeview_item.cc" />
+    <ClCompile Include="..\src\lazygl\widget\treeview_widget.cc" />
     <ClCompile Include="..\src\lazygl\widget\widget.cc" />
     <ClCompile Include="..\src\lazygl\window\input\keyboard.cc" />
     <ClCompile Include="..\src\lazygl\window\input\mouse.cc" />
@@ -189,6 +193,9 @@
     <ClInclude Include="..\src\lazygl\renderer\camera.h" />
     <ClInclude Include="..\src\lazygl\renderer\painter2d.h" />
     <ClInclude Include="..\src\lazygl\renderer\renderer.h" />
+    <ClInclude Include="..\src\lazygl\renderer\renderer_pushbutton_widget-inl.h" />
+    <ClInclude Include="..\src\lazygl\renderer\renderer_split_widget-inl.h" />
+    <ClInclude Include="..\src\lazygl\renderer\renderer_text_widget-inl.h" />
     <ClInclude Include="..\src\lazygl\resource\resources.h" />
     <ClInclude Include="..\src\lazygl\shader\program.h" />
     <ClInclude Include="..\src\lazygl\shader\shader.h" />
@@ -196,7 +203,11 @@
     <ClInclude Include="..\src\lazygl\utils\async_loader.h" />
     <ClInclude Include="..\src\lazygl\utils\convert_gl.h" />
     <ClInclude Include="..\src\lazygl\utils\logger.h" />
+    <ClInclude Include="..\src\lazygl\widget\pushbutton_widget.h" />
     <ClInclude Include="..\src\lazygl\widget\split_widget.h" />
+    <ClInclude Include="..\src\lazygl\widget\text_widget.h" />
+    <ClInclude Include="..\src\lazygl\widget\treeview\treeview_item.h" />
+    <ClInclude Include="..\src\lazygl\widget\treeview_widget.h" />
     <ClInclude Include="..\src\lazygl\widget\widget.h" />
     <ClInclude Include="..\src\lazygl\window\input\inputs.h" />
     <ClInclude Include="..\src\lazygl\window\input\keyboard.h" />

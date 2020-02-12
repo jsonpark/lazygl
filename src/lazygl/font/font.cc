@@ -45,6 +45,7 @@ Glyph Font::operator () (wchar_t x, int height_pixels)
 {
   FT_Set_Pixel_Sizes(face_, 0, height_pixels);
   FT_Load_Char(face_, x, FT_LOAD_RENDER);
+  FT_Render_Glyph(face_->glyph, FT_RENDER_MODE_MONO);
   return Glyph(face_->glyph);
 }
 
@@ -63,5 +64,11 @@ std::vector<Glyph> Font::operator () (const std::wstring& s, int height_pixels)
     result.emplace_back((*this)(c));
 
   return result;
+}
+
+int Font::HeightInPixels(double font_size)
+{
+  double font_size_pixel = font_size * 4. / 3.;
+  return static_cast<int>(std::round(font_size_pixel));
 }
 }

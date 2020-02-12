@@ -52,6 +52,9 @@
     <Filter Include="src\lazygl\widget">
       <UniqueIdentifier>{03c05122-2d28-4a51-8d1b-ebf0a38cabcf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\lazygl\widget\treeview">
+      <UniqueIdentifier>{f0aed91d-e4fc-4eba-8a05-28f63fdeb15e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\lazygl\window\window.cc">
@@ -118,6 +121,18 @@
       <Filter>src\lazygl\font</Filter>
     </ClCompile>
     <ClCompile Include="..\src\lazygl\widget\widget.cc">
+      <Filter>src\lazygl\widget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\lazygl\widget\text_widget.cc">
+      <Filter>src\lazygl\widget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\lazygl\widget\treeview_widget.cc">
+      <Filter>src\lazygl\widget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\lazygl\widget\treeview\treeview_item.cc">
+      <Filter>src\lazygl\widget\treeview</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\lazygl\widget\pushbutton_widget.cc">
       <Filter>src\lazygl\widget</Filter>
     </ClCompile>
   </ItemGroup>
@@ -202,6 +217,27 @@
     </ClInclude>
     <ClInclude Include="..\src\lazygl\window\input\inputs.h">
       <Filter>src\lazygl\window\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\lazygl\widget\text_widget.h">
+      <Filter>src\lazygl\widget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\lazygl\renderer\renderer_split_widget-inl.h">
+      <Filter>src\lazygl\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\lazygl\renderer\renderer_text_widget-inl.h">
+      <Filter>src\lazygl\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\lazygl\widget\treeview_widget.h">
+      <Filter>src\lazygl\widget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\lazygl\widget\treeview\treeview_item.h">
+      <Filter>src\lazygl\widget\treeview</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\lazygl\widget\pushbutton_widget.h">
+      <Filter>src\lazygl\widget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\lazygl\renderer\renderer_pushbutton_widget-inl.h">
+      <Filter>src\lazygl\renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

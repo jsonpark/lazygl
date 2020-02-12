@@ -16,7 +16,7 @@ void Widget::Connect(std::shared_ptr<Widget> parent, std::shared_ptr<Widget> chi
   child->SetParent(parent);
 }
 
-void Widget::Disonnect(std::shared_ptr<Widget> parent, std::shared_ptr<Widget> child)
+void Widget::Disconnect(std::shared_ptr<Widget> parent, std::shared_ptr<Widget> child)
 {
   if (child == nullptr || parent == nullptr)
     return;
@@ -67,27 +67,18 @@ void Widget::DeleteChild(std::shared_ptr<Widget> child)
   }
 }
 
-void Widget::Update()
+void Widget::UpdatePosSize()
 {
   UpdateChildrenPosSize();
 
   for (auto child : children_)
-    child->Update();
+  {
+    child->root_pos_ = root_pos_ + child->GetPos();
+    child->UpdatePosSize();
+  }
 }
 
 void Widget::UpdateChildrenPosSize()
-{
-}
-
-void Widget::MouseButton(input::MouseButton button, input::MouseAction action, double x, double y)
-{
-}
-
-void Widget::MouseMove(double x, double y)
-{
-}
-
-void Widget::Keyboard(input::Key key, input::KeyAction action)
 {
 }
 }

@@ -27,6 +27,8 @@ public:
   std::vector<Glyph> operator () (const std::string& s, int height_pixels = 64);
   std::vector<Glyph> operator () (const std::wstring& s, int height_pixels = 64);
 
+  int HeightInPixels(double font_size);
+
 private:
   std::string font_directory_;
   std::string font_name_;

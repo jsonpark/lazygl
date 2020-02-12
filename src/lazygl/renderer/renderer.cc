@@ -1,5 +1,9 @@
 #include "lazygl/renderer/renderer.h"
 
+#include "lazygl/renderer/renderer_split_widget-inl.h"
+#include "lazygl/renderer/renderer_text_widget-inl.h"
+#include "lazygl/renderer/renderer_pushbutton_widget-inl.h"
+
 #include <locale>
 #include <codecvt>
 
@@ -27,19 +31,97 @@ Renderer::~Renderer() = default;
 
 void Renderer::MouseButton(input::MouseButton button, input::MouseAction action, double x, double y)
 {
+  // (0, 0) at the left-top corner
+
+  if (mouse_active_widget_ == nullptr)
+  {
+    WidgetMouseButton(widget_, button, action, x, y);
+  }
+
+  else
+  {
+    auto current_widget = mouse_active_widget_;
+    mouse_active_widget_ = nullptr;
+
+    const auto& root_pos = current_widget->GetRootPos();
+
+    WidgetMouseButton(current_widget, button, action, x - root_pos(0), y - root_pos(1));
+  }
 }
 
 void Renderer::MouseMove(double x, double y)
 {
+  if (mouse_active_widget_ == nullptr)
+  {
+    WidgetMouseMove(widget_, x, y);
+  }
+
+  else
+  {
+    const auto& root_pos = mouse_active_widget_->GetRootPos();
+    WidgetMouseMove(mouse_active_widget_, x - root_pos(0), y - root_pos(1));
+  }
 }
 
 void Renderer::Keyboard(input::Key key, input::KeyAction action)
 {
+  // TODO
+  //WidgetKeyboard(widget_, key, action);
+}
+
+template <>
+void Renderer::WidgetMouseButton(std::shared_ptr<Widget> widget, input::MouseButton button, input::MouseAction action, double x, double y)
+{
+  if (auto hs = std::dynamic_pointer_cast<HorizontalSplit>(widget))
+    WidgetMouseButton(hs, button, action, x, y);
+
+  if (auto vs = std::dynamic_pointer_cast<VerticalSplit>(widget))
+    WidgetMouseButton(vs, button, action, x, y);
+
+  if (auto pw = std::dynamic_pointer_cast<PushbuttonWidget>(widget))
+    WidgetMouseButton(pw, button, action, x, y);
+}
+
+template <>
+void Renderer::WidgetMouseMove(std::shared_ptr<Widget> widget, double x, double y)
+{
+  if (auto hs = std::dynamic_pointer_cast<HorizontalSplit>(widget))
+    WidgetMouseMove(hs, x, y);
+
+  if (auto vs = std::dynamic_pointer_cast<VerticalSplit>(widget))
+    WidgetMouseMove(vs, x, y);
+}
+
+template <>
+void Renderer::WidgetDraw(std::shared_ptr<Widget> widget)
+{
+  const auto& size = widget->GetSize();
+
+  if (auto hs = std::dynamic_pointer_cast<HorizontalSplit>(widget))
+    WidgetDraw(hs);
+
+  if (auto vs = std::dynamic_pointer_cast<VerticalSplit>(widget))
+    WidgetDraw(vs);
+
+  if (auto tw = std::dynamic_pointer_cast<TextWidget>(widget))
+    WidgetDraw(tw);
+
+  if (auto pw = std::dynamic_pointer_cast<PushbuttonWidget>(widget))
+    WidgetDraw(pw);
+
+  for (auto child : widget->GetChildren())
+  {
+    const auto& pos = child->GetPos();
+    WidgetDraw(child);
+  }
 }
 
 void Renderer::Resize(int width, int height)
 {
   Window::Resize(width, height);
+
+  widget_->SetSize(width, height);
+  widget_->UpdatePosSize();
 }
 
 void Renderer::Initialize()
@@ -94,15 +176,42 @@ void Renderer::Initialize()
   line_tex_object_.MinFilter(TextureObject::MinFilter::NEAREST);
   line_tex_object_.Update(line_texture_);
 
-  glyph_object_.WrapS(TextureObject::Wrap::CLAMP_TO_EDGE);
-  glyph_object_.WrapT(TextureObject::Wrap::CLAMP_TO_EDGE);
-  glyph_object_.MinFilter(TextureObject::MinFilter::LINEAR);
-  glyph_object_.MagFilter(TextureObject::MagFilter::LINEAR);
+  glyph_object_.WrapS(TextureObject::Wrap::MIRRORED_REPEAT);
+  glyph_object_.WrapT(TextureObject::Wrap::MIRRORED_REPEAT);
+  glyph_object_.MinFilter(TextureObject::MinFilter::NEAREST);
+  glyph_object_.MagFilter(TextureObject::MagFilter::NEAREST);
   glyph_object_.UpdateFilters();
 
   geom::Mesh mesh("..\\..\\fetch_ros\\fetch_description\\meshes\\base_link.dae");
   textures_["base"].LoadAsync(mesh.GetTextureFilename());
   meshes_["base"] = std::move(mesh);
+
+  auto split0 = std::make_shared<VerticalSplit>();
+  auto split1 = std::make_shared<VerticalSplit>();
+  auto split2 = std::make_shared<HorizontalSplit>();
+  auto split3 = std::make_shared<HorizontalSplit>();
+  auto split4 = std::make_shared<VerticalSplit>();
+  auto split5 = std::make_shared<HorizontalSplit>();
+  auto split_main = std::make_shared<HorizontalSplit>();
+
+  auto push20 = std::make_shared<PushbuttonWidget>("Push Button 2_0");
+  auto push21 = std::make_shared<PushbuttonWidget>("Push Button 2_1");
+  auto push30 = std::make_shared<PushbuttonWidget>("Push Button 3_0");
+  auto push31 = std::make_shared<PushbuttonWidget>("Push Button 3_1");
+  auto push40 = std::make_shared<PushbuttonWidget>("Push Button 4_0");
+  auto push41 = std::make_shared<PushbuttonWidget>("Push Button 4_1");
+  auto push50 = std::make_shared<PushbuttonWidget>("Push Button 5_0");
+  auto push51 = std::make_shared<PushbuttonWidget>("Push Button 5_1");
+
+  split_main->AttachWidget(split0, split1);
+  split0->AttachWidget(split2, split4);
+  split1->AttachWidget(split3, split5);
+  split2->AttachWidget(push20, push21);
+  split3->AttachWidget(push30, push31);
+  split4->AttachWidget(push40, push41);
+  split5->AttachWidget(push50, push51);
+
+  widget_ = split_main;
 }
 
 void Renderer::PrepareDraw()
@@ -119,6 +228,13 @@ void Renderer::Draw()
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glViewport(0, 0, Width(), Height());
 
+  widget_->SetPos(0., 0.);
+  widget_->SetSize(Width(), Height());
+  widget_->UpdatePosSize();
+
+  WidgetDraw(widget_);
+
+  /*
   glEnable(GL_DEPTH_TEST);
   if (textures_["base"].IsReady())
   {
@@ -138,20 +254,8 @@ void Renderer::Draw()
 
   program_mesh_.Use();
   meshes_["base"].Draw();
-
-  glDisable(GL_MULTISAMPLE);
-  RenderText(20, 500, 36., "Sample", Vector3f(0.f, 0.f, 0.f));
-  RenderText(20, 550, 36., L"æ»≥Á«œººø‰", Vector3f(0.f, 0.f, 0.f));
-  RenderText(20, 400, 8., 
-    "#include <iostream>\n"
-    "\n"
-    "int main()\n"
-    "{\n"
-    "  std::cout << \"Hello World!\" << std::endl;\n"
-    "}\n"
-    , Vector3f(0.f, 0.f, 0.f));
+  */
 }
-
 void Renderer::DrawRect(double x, double y, double width, double height, const Vector3f& color)
 {
   glDisable(GL_DEPTH_TEST);
@@ -192,8 +296,8 @@ void Renderer::RenderText(double x, double y, double font_size, const std::strin
 void Renderer::RenderText(double x, double y, double font_size, const std::wstring& s, const Vector3f& color)
 {
   // Convert font_size from point to pixel
-  double font_size_pixel = font_size * 4. / 3.;
-  if (font_size_pixel <= 64)
+  int glyph_height = arial_.HeightInPixels(font_size);
+  if (glyph_height <= 64)
   {
     RenderTextGrid(x, y, font_size, s, color);
     return;
@@ -201,10 +305,12 @@ void Renderer::RenderText(double x, double y, double font_size, const std::wstri
 
   program_screen_font_.Uniform3f("color", color);
 
-  double scale = font_size_pixel / 64.;
+  double scale = static_cast<double>(glyph_height) / 64.;
   double line_height = 64.;
 
   double start_x = x;
+
+  y -= line_height * scale;
 
   for (auto c : s)
   {
@@ -251,8 +357,8 @@ void Renderer::RenderText(double x, double y, double font_size, const std::wstri
 void Renderer::RenderTextGrid(double x, double y, double font_size, const std::wstring& s, const Vector3f& color)
 {
   // Convert font_size from point to pixel
-  double font_size_pixel = font_size * 4. / 3.;
-  if (font_size_pixel > 64)
+  int glyph_height = arial_.HeightInPixels(font_size);
+  if (glyph_height > 64)
   {
     RenderText(x, y, font_size, s, color);
     return;
@@ -260,15 +366,14 @@ void Renderer::RenderTextGrid(double x, double y, double font_size, const std::w
 
   program_screen_font_grid_.Uniform3f("color", color);
 
-  font_size_pixel = std::round(font_size_pixel);
-  int glyph_height = static_cast<int>(font_size_pixel);
-
   // TODO: line width
-  double line_height = font_size_pixel + 1;
+  double line_height = static_cast<double>(glyph_height);
 
   // Round (x, y) to integer
   x = std::round(x);
   y = std::round(y);
+
+  y -= line_height;
 
   double start_x = x;
 
